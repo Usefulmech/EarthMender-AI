@@ -110,7 +110,7 @@ class PlasticDetector:
 
     def detect_from_frame(self, frame: np.ndarray):
         """Run detection on a raw OpenCV frame (webcam)."""
-        results    = self.model(frame, conf=self.confidence, verbose=False)[0]
+        results    = self.model(frame, conf=self.confidence, verbose=False, imgsz=320)[0]
         detections = self._parse_results(results)
         annotated  = self._draw_boxes(frame.copy(), detections)
         return annotated, detections
