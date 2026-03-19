@@ -19,7 +19,7 @@ Thumbs.db
 *.log
 
 # Model files (IMPORTANT - too large)
-*.pt
+
 
 # JSON data (optional - avoid clutter)
 waste_reports.json
