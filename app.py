@@ -41,8 +41,9 @@ for k, v in {
 
 # ── JS: click a Streamlit tab by index ───────────────────────────────────────
 def _tjs(i):
+    # &quot; gets decoded to " by HTML parser before JS — safe in onclick="..."
     return (f"(function(){{var t=window.parent.document"
-            f".querySelectorAll('[data-baseweb=\"tab\"]');"
+            f".querySelectorAll('[data-baseweb=&quot;tab&quot;]');"
             f"if(t[{i}])t[{i}].click();}})();")
 
 # ── CSS ───────────────────────────────────────────────────────────────────────
@@ -98,8 +99,8 @@ html,body,[data-testid="stAppViewContainer"],[data-testid="stMain"],
   border-bottom:3px solid transparent!important;
   font-family:'Inter',sans-serif!important;min-height:56px!important}
 .stTabs [aria-selected="true"]{
-  color:#1a7a4a!important;border-bottom:3px solid #1a7a4a!important;
-  background:rgba(26,122,74,.06)!important}
+  color:#4caf50!important;border-bottom:3px solid #4caf50!important;
+  background:rgba(76,175,80,.06)!important}
 .stTabs [data-baseweb="tab-panel"]{background:#141d16!important;padding:0!important}
 
 /* ── Hero ── */
@@ -118,7 +119,7 @@ html,body,[data-testid="stAppViewContainer"],[data-testid="stMain"],
   text-transform:uppercase;letter-spacing:.5px;font-weight:600}
 
 /* ── Page ── */
-.pg{background:#141d16;padding:0 16px 80px}
+.pg{background:#141d16;padding:0 0 80px}
 
 /* ── Section title ── */
 .sh{font-size:15px;font-weight:800;color:#e0ece0;letter-spacing:-.2px}
@@ -126,7 +127,8 @@ html,body,[data-testid="stAppViewContainer"],[data-testid="stMain"],
 /* ── Alert ── */
 .al{background:rgba(255,152,0,.1);border-radius:12px;padding:9px 12px;
   display:flex;align-items:center;gap:9px;
-  border:.5px solid rgba(255,152,0,.25);margin:6px 0 4px}
+  border:.5px solid rgba(255,152,0,.25);margin:6px 0 4px;
+  margin-left:0;margin-right:0;}
 .ald{width:7px;height:7px;border-radius:50%;background:#e65100;flex-shrink:0}
 .alt{font-size:13px;color:#ffcc80;flex:1;font-weight:600}
 
@@ -135,7 +137,8 @@ html,body,[data-testid="stAppViewContainer"],[data-testid="stMain"],
 /* ── Case cards ── */
 .cc{background:#1e3022;border-radius:14px;padding:14px 16px;
   border:.5px solid rgba(255,255,255,.07);
-  display:flex;align-items:flex-start;gap:11px;margin-bottom:8px;}
+  display:flex;align-items:flex-start;gap:11px;margin-bottom:8px;
+  margin-left:0;margin-right:0;}
 .cdot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:5px}
 .ctype{font-size:13px;font-weight:700;color:#eee;line-height:1.3}
 .cloc{font-size:12px;color:#8aaa8c;margin-top:3px}
@@ -272,8 +275,63 @@ tbody tr td{color:#b0cdb4!important;border-color:rgba(255,255,255,.05)!important
 
 /* Bottom nav removed */
 
-@media(max-width:360px){.sg,.dtiles{grid-template-columns:repeat(2,1fr)}}
+/* ── Mobile responsiveness ── */
+@media(max-width:480px){
+  .block-container{max-width:100vw!important;padding:0!important}
+  .hero{padding:12px 12px 14px}
+  .bal{padding:12px 14px}
+  .bal-val{font-size:24px}
+  .sg{gap:5px}
+  .sv{font-size:15px}
+  .pg{padding:0 12px 80px}
+  .cc{padding:11px 12px}
+  .top{padding:10px 12px 9px}
+  .av{width:36px;height:36px;font-size:13px}
+  .usr{font-size:14px}
+  .stTabs [data-baseweb="tab"]{font-size:9px!important;padding:7px 1px 8px!important;min-height:48px!important}
+}
+@media(max-width:360px){
+  .sg,.dtiles{grid-template-columns:repeat(2,1fr)}
+  .stTabs [data-baseweb="tab"]{font-size:8px!important;letter-spacing:.3px!important}
+}
+/* Ensure touch targets are large enough */
+@media(hover:none){
+  .stButton>button{min-height:44px!important}
+}
+/* OPay-style bottom nav — mobile only */
+.em-bnav-opay{position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:480px;background:#0e1a10;
+  border-top:1px solid rgba(255,255,255,.08);z-index:9999;
+  padding-bottom:env(safe-area-inset-bottom);display:none;
+  box-shadow:0 -2px 12px rgba(0,0,0,.3);}
+@media(max-width:640px){.em-bnav-opay{display:block!important}}
+.em-bnav-row{display:flex;width:100%;align-items:flex-end;}
+.em-bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding:8px 4px 10px;cursor:pointer;border:none;
+  background:transparent;font-family:'Inter',sans-serif;
+  -webkit-tap-highlight-color:transparent;}
+.em-bnav-ic{font-size:20px;line-height:1;}
+.em-bnav-lbl{font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.4px;color:#4a6450;}
+.em-bnav-item.active .em-bnav-lbl{color:#4caf50;}
+.em-bnav-item.active .em-bnav-ic{filter:drop-shadow(0 0 4px rgba(76,175,80,.5));}
+.em-bnav-fab{flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding:4px 4px 10px;cursor:pointer;border:none;
+  background:transparent;-webkit-tap-highlight-color:transparent;}
+.em-bnav-fab-c{width:46px;height:46px;border-radius:50%;background:#1a7a4a;
+  display:flex;align-items:center;justify-content:center;
+  margin-top:-10px;border:3px solid #0e1a10;
+  box-shadow:0 4px 14px rgba(26,122,74,.45);font-size:22px;line-height:1;}
+.em-bnav-fab-l{font-size:9px;color:#4caf50;font-weight:700;
+  text-transform:uppercase;letter-spacing:.4px;}
+.em-sp{height:68px;}
 
+/* Camera widget — full width */
+[data-testid="stCameraInput"]{width:100%!important}
+[data-testid="stCameraInput"] video{width:100%!important;border-radius:12px;object-fit:cover}
+[data-testid="stCameraInput"] img{width:100%!important;border-radius:12px}
+[data-testid="stCameraInput"] section{width:100%!important}
+[data-testid="stCameraInputButton"]{width:100%!important}
 /* All images always fit container — never overflow */
 [data-testid="stImage"]{width:100%!important;max-width:100%!important}
 [data-testid="stImage"] img{width:100%!important;max-width:100%!important;
@@ -314,17 +372,15 @@ def _bn_html(idx, ik, lbl, cur):
 # ── ANALYTIC HEATMAP ──────────────────────────────────────────────────────────
 def _heatmap(reports, map_idx=2):
     open_r = [r for r in reports if r.get("status")=="OPEN"]
-    open_js = _tjs(map_idx)
 
     if not open_r:
-        return f"""
+        return """
         <div class="hm-card">
           <div class="hm-hdr">
             <div>
-              <div class="hm-title">🗺️ Pollution Intensity</div>
+              <div class="hm-title">🗺️ Pollution Intensity Map</div>
               <div class="hm-sub">No active reports yet</div>
             </div>
-            <button class="hm-openbtn" onclick="{open_js}">Open Map →</button>
           </div>
           <div class="hm-empty">
             <div class="hm-empty-icon">🌿</div>
@@ -391,7 +447,6 @@ def _heatmap(reports, map_idx=2):
           <div class="hm-title">🗺️ Pollution Intensity Map</div>
           <div class="hm-sub">Each cell = one ~2km zone · darker = more waste reported</div>
         </div>
-        <button class="hm-openbtn" onclick="{open_js}">Open Map →</button>
       </div>
       <div class="hm-grid" style="grid-template-columns:repeat({cols},1fr);">{cells}</div>
       <div class="hm-legend">
@@ -476,7 +531,7 @@ def _login():
       <div style="font-size:56px;margin-bottom:10px;">🌍</div>
       <div style="font-size:26px;font-weight:900;color:#e0ece0;letter-spacing:-.5px;margin-bottom:5px;">
         EarthMender AI</div>
-      <div style="font-size:11px;color:#4a6450;letter-spacing:2.5px;font-weight:700;">
+      <div style="font-size:11px;color:#a5d6a7;letter-spacing:2.5px;font-weight:700;">
         DETECT · REPORT · LEARN · ACT</div>
     </div>
     """, unsafe_allow_html=True)
@@ -522,9 +577,11 @@ if not st.session_state.logged_in:
 # LOAD
 # ══════════════════════════════════════════════════════════════════════════════
 @st.cache_resource
-def _det(): return PlasticDetector()
+def _det():
+    return PlasticDetector()
 
-det       = _det()
+with st.spinner("🌍 Loading EarthMender AI..."):
+    det = _det()
 all_r     = load_reports()
 open_r    = get_open_reports()
 res_r     = get_resolved_reports()
@@ -566,84 +623,36 @@ t_ops = _tabs[5] if role=="Operator" else None
 with t_home:
     st.session_state.cam_open = False
 
-    st.markdown(f"""
-    <div class="hero">
-      <div class="bal">
-        <div class="bal-lbl">Community Waste Reports</div>
-        <div class="bal-val">{total} Cases</div>
-      </div>
-      <div class="sg">
-        <div class="sc"><div class="sv" style="color:#ffcc80;">{open_c}</div>
-          <div class="sl">Open</div></div>
-        <div class="sc"><div class="sv" style="color:#a5d6a7;">{resolved}</div>
-          <div class="sl">Resolved</div></div>
-        <div class="sc"><div class="sv">{rate}</div><div class="sl">Rate</div></div>
-        <div class="sc"><div class="sv">{items}</div><div class="sl">Items</div></div>
-      </div>
-    </div>
-    <div class="pg" style="margin-top:-4px;">
-    """, unsafe_allow_html=True)
-    # Alert
+    # Build everything as pure HTML — zero Streamlit widget gaps
+    _sorted  = sorted(all_r, key=lambda x: x.get("timestamp",""), reverse=True)
+    _show_all = st.session_state.show_all
+    _display = _sorted if _show_all else _sorted[:3]
+
+    # Quick-action JS
+
+
+    # Alert HTML
+    _alert_html = ""
     if hi_open > 0:
-        st.markdown(f"""
+        _s = "s" if hi_open > 1 else ""
+        _alert_html = f"""
         <div class="al"><div class="ald"></div>
-          <div class="alt">{hi_open} HIGH severity case{'s' if hi_open>1 else ''} need urgent attention</div>
-        </div>""", unsafe_allow_html=True)
+          <div class="alt">{hi_open} HIGH severity case{_s} — urgent attention needed</div>
+        </div>"""
 
-    # Recent Reports
-    show_all  = st.session_state.show_all
-    _sorted   = sorted(all_r, key=lambda x:x.get("timestamp",""), reverse=True)
-    _display  = _sorted if show_all else _sorted[:3]
-
-    _tog_label = "Less" if show_all else f"All ({len(all_r)})"
-    
-    # Title and toggle button in a row - flush with top
-    st.markdown('<div style="margin-top:-60px;margin-bottom:6px;">', unsafe_allow_html=True)
-    col1, col2 = st.columns([0.85, 0.15])
-    with col1:
-        st.markdown('<span style="font-size:16px;font-weight:800;color:#e0ece0;line-height:1;padding-top:2px;">Recent Reports</span>', unsafe_allow_html=True)
-    with col2:
-        if st.button(_tog_label, key="tog", use_container_width=False):
-            st.session_state.show_all = not show_all
-            st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Style button to be compact
-    st.markdown("""
-    <style>
-    div[data-testid="element-container"]:has(button[key="tog"]) {
-        margin-top: -38px !important;
-        margin-bottom: 0 !important;
-    }
-    div[data-testid="element-container"]:has(button[key="tog"]) button {
-        height: 20px !important;
-        padding: 0px 8px !important;
-        font-size: 11px !important;
-        border-radius: 16px !important;
-        background: rgba(76,175,80,.15) !important;
-        border: .5px solid rgba(76,175,80,.35) !important;
-        color: #4caf50 !important;
-        line-height: 20px !important;
-        min-height: 20px !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    if not _display:
-        st.info("No reports yet — be the first to report waste!")
-    for r in _display:
+    # Report cards HTML
+    def _card(r):
         sev   = r.get("severity","LOW")
         sta   = r.get("status","OPEN")
         dc    = {"HIGH":"#c62828","MEDIUM":"#e65100","LOW":"#2e7d32"}.get(sev,"#2e7d32")
         types = ", ".join(WASTE_LABELS.get(t,t) for t in r.get("waste_types",[]))
         desc  = r.get("description","") or r.get("date","")
-        ss    = {"HIGH":"background:#ffebee;color:#c62828;",
-                 "MEDIUM":"background:#fff3e0;color:#bf360c;",
-                 "LOW":"background:#e8f5e9;color:#1b5e20;"}.get(sev,"")
-        ts    = ("background:#fff3e0;color:#bf360c;" if sta=="OPEN"
-                 else "background:#e8f5e9;color:#1b5e20;")
-        st.markdown(f"""
-        <div class="cc">
+        ss    = {"HIGH":"background:rgba(198,40,40,.15);color:#ef9a9a;",
+                 "MEDIUM":"background:rgba(230,81,0,.15);color:#ffcc80;",
+                 "LOW":"background:rgba(46,125,50,.15);color:#a5d6a7;"}.get(sev,"")
+        ts    = ("background:rgba(230,81,0,.13);color:#ffcc80;" if sta=="OPEN"
+                 else "background:rgba(46,125,50,.13);color:#a5d6a7;")
+        return f"""<div class="cc">
           <div class="cdot" style="background:{dc};"></div>
           <div style="flex:1;min-width:0;">
             <div class="ctype">{types}</div>
@@ -651,30 +660,67 @@ with t_home:
             <div class="cmeta">
               <span class="pi" style="{ss}">{sev}</span>
               <span class="pi" style="{ts}">{sta}</span>
-              <span class="ctm">{r.get('time','')}</span>
+              <span class="ctm">{r.get("time","")}</span>
             </div>
           </div>
-        </div>""", unsafe_allow_html=True)
+        </div>"""
 
-    # Pollution intensity heatmap
-    st.markdown('<div class="sh" style="padding-top:12px;padding-bottom:8px;">'
-                'Pollution Intensity</div>', unsafe_allow_html=True)
-    st.markdown(_heatmap(all_r, map_idx=_T["map"]), unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+    _visible_cards = "".join(_card(r) for r in _display)
+    if not _display:
+        _visible_cards = '<div style="font-size:13px;color:#6a826c;padding:12px 0;">No reports yet — be the first!</div>'
+
+    # Extra cards (hidden, revealed by JS toggle)
+    _extra_cards = ""
+    if not _show_all and len(_sorted) > 3:
+        for r in _sorted[3:]:
+            _xc = _card(r).replace('<div class="cc">', '<div class="cc xr" style="display:none;">', 1)
+            _extra_cards += _xc
+
+    _tot = len(_sorted)
+    _hmap = _heatmap(all_r, map_idx=_T["map"])
+
+    # Hero + alert + cards — all in one markdown, no gaps
+    st.markdown(f"""
+<div class="hero">
+  <div class="bal">
+    <div class="bal-lbl">Community Waste Reports</div>
+    <div class="bal-val">{total} Cases</div>
+  </div>
+  <div class="sg">
+    <div class="sc"><div class="sv" style="color:#ffcc80;">{open_c}</div><div class="sl">Open</div></div>
+    <div class="sc"><div class="sv" style="color:#a5d6a7;">{resolved}</div><div class="sl">Resolved</div></div>
+    <div class="sc"><div class="sv">{rate}</div><div class="sl">Rate</div></div>
+    <div class="sc"><div class="sv">{items}</div><div class="sl">Items</div></div>
+  </div>
+</div>
+<div class="pg" style="padding-top:0;margin-top:0;">
+  {_alert_html}
+</div>
+""", unsafe_allow_html=True)
+
+    st.markdown("#### Recent Reports")
+    if st.button("Less" if _show_all else f"All ({_tot})", key="tog"):
+        st.session_state.show_all = not _show_all
+        st.rerun()
+
+    # Cards
+    st.markdown(
+        '<div style="padding:0;">'+_visible_cards+_extra_cards+'</div>',
+        unsafe_allow_html=True)
+
+    # Heatmap — separate call keeps its CSS curly braces safe
+    st.markdown(_hmap, unsafe_allow_html=True)
 
 
-# ══════════════════════════════════════════════════════════════════════════════
-# DETECT
-# ══════════════════════════════════════════════════════════════════════════════
 with t_det:
     # pg wrapper with no side padding so banner bleeds full width
-    st.markdown('<div style="background:#141d16;padding-bottom:100px;margin-top:-20px;">', unsafe_allow_html=True)
-    # Hero banner — full width, flush under tab bar
+    st.markdown('<div style="background:#141d16;padding-bottom:100px;margin-top:-14px;">', unsafe_allow_html=True)
+    # Hero banner — OPay pill: straight top (flush with tabs), rounded bottom
     st.markdown("""
     <div style="background:linear-gradient(135deg,#1a7a4a 0%,#0e4828 100%);
-         padding:22px 20px 30px;
-         border-radius:0 0 18px 18px;
-         clip-path:ellipse(100% 96% at 50% 0%);">
+         padding:20px 20px 24px;
+         border-radius:0 0 20px 20px;
+         margin:0;">
       <div style="text-align:center;font-family:'Georgia',serif;
            line-height:1.6;letter-spacing:.1px;padding-bottom:2px;">
         <span style="font-size:17px;font-weight:400;color:rgba(255,255,255,.8);">
@@ -845,7 +891,7 @@ with t_det:
 # ══════════════════════════════════════════════════════════════════════════════
 with t_map:
     st.session_state.cam_open = False
-    st.markdown('<div style="background:#141d16;padding:0 16px 100px;margin-top:-20px;">', unsafe_allow_html=True)
+    st.markdown('<div style="background:#141d16;padding:0 16px 100px;margin-top:-14px;">', unsafe_allow_html=True)
     st.markdown("""<div style="padding:6px 0 8px;">
       <div class="pg-title">🗺️ Live Pollution Map</div>
       <div class="pg-sub">Heatmap · severity · recurrence · time-weighted</div>
@@ -954,3 +1000,32 @@ if t_ops:
                 if st.button(f"↩️ Reopen #{r['id']}",key=f"reopen_{r['id']}"):
                     reopen_report(r["id"]); st.rerun()
         st.markdown("</div>",unsafe_allow_html=True)
+
+# ── BOTTOM NAV — OPay style, mobile only ──────────────────────────────────────
+st.markdown(f"""
+<div class="em-bnav-opay">
+  <div class="em-bnav-row">
+    <button class="em-bnav-item" onclick="{_tjs(_T['home'])}">
+      <span class="em-bnav-ic">🏠</span>
+      <span class="em-bnav-lbl">Home</span>
+    </button>
+    <button class="em-bnav-item" onclick="{_tjs(_T['map'])}">
+      <span class="em-bnav-ic">🗺️</span>
+      <span class="em-bnav-lbl">Map</span>
+    </button>
+    <button class="em-bnav-fab" onclick="{_tjs(_T['detect'])}">
+      <div class="em-bnav-fab-c">🌿</div>
+      <span class="em-bnav-fab-l">Mend</span>
+    </button>
+    <button class="em-bnav-item" onclick="{_tjs(_T['stats'])}">
+      <span class="em-bnav-ic">📊</span>
+      <span class="em-bnav-lbl">Stats</span>
+    </button>
+    <button class="em-bnav-item" onclick="{_tjs(_T['learn'])}">
+      <span class="em-bnav-ic">📚</span>
+      <span class="em-bnav-lbl">Learn</span>
+    </button>
+  </div>
+</div>
+<div class="em-sp"></div>
+""", unsafe_allow_html=True)
